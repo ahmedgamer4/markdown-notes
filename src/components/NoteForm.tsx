@@ -1,6 +1,6 @@
 import React, { FormEvent, useRef, useState } from 'react'
 import { Button, Col, Form, Row, Stack } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import CreatableSelect from 'react-select/creatable'
 import { NoteData, Tag } from '../App'
 import { v4 as uuid } from 'uuid'
@@ -9,12 +9,13 @@ type NoteFormProps = {
   onSubmit: (data: NoteData) => void
   onAddTag: (tag: Tag) => void
   availableTags: Tag[]
-}
+} & Partial<NoteData>
 
-function NoteForm({ onSubmit, onAddTag, availableTags }: NoteFormProps) {
+function NoteForm({ onSubmit, onAddTag, availableTags, title = '', markdown = '', tags = [] }: NoteFormProps) {
   const titleRef = useRef<HTMLInputElement>(null)
   const markdonwnRef = useRef<HTMLTextAreaElement>(null)
-  const [selectedTags, setSelectedTags] = useState<Tag[]>([])
+  const [selectedTags, setSelectedTags] = useState<Tag[]>(tags)
+  const navigate = useNavigate()
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -24,6 +25,8 @@ function NoteForm({ onSubmit, onAddTag, availableTags }: NoteFormProps) {
       markdown: markdonwnRef.current!.value,
       tags: selectedTags
     })
+
+    navigate('..')
   }
 
   return (
@@ -33,7 +36,7 @@ function NoteForm({ onSubmit, onAddTag, availableTags }: NoteFormProps) {
           <Col>
             <Form.Group controlId='title'>
               <Form.Label>Title</Form.Label>
-              <Form.Control ref={titleRef} required />
+              <Form.Control ref={titleRef} defaultValue={title} required />
             </Form.Group>
           </Col>
           <Col>
@@ -62,7 +65,7 @@ function NoteForm({ onSubmit, onAddTag, availableTags }: NoteFormProps) {
         </Row>
         <Form.Group controlId='markdown'>
           <Form.Label>Body</Form.Label>
-          <Form.Control required as='textarea' ref={markdonwnRef} rows={15} />
+          <Form.Control required as='textarea' ref={markdonwnRef} defaultValue={markdown} rows={15} />
         </Form.Group>
         <Stack direction='horizontal' gap={2} className='justify-content-end mt-3'>
           <Button type='submit' variant='primary'>Save</Button>
