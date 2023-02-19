@@ -2,7 +2,7 @@ import React from 'react'
 import { Badge, Col, Row, Stack, Button } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { useNote } from './NoteLayout'
-import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
+import ReactMarkdown from 'react-markdown'
 
 type NoteProps = {
   onDeleteNote: (id: string) => void

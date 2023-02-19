@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Form, Col, Row, Stack, Button, Card, Badge, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import ReactSelect from 'react-select'
@@ -31,10 +31,16 @@ function NoteList({ availableTags, notes, updateTag, deleteTag }: NoteListProps)
   const [title, setTitle] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
 
+
   const filteredNotes = useMemo(() => {
     return notes.filter((note) => {
-      return (title === '' || note.title.toLowerCase().includes(title.toLowerCase())
-        && selectedTags.length === 0 || selectedTags.every(tag => note.tags.some(noteTag => noteTag.id === tag.id))
+      return (
+        (title === "" ||
+          note.title.toLowerCase().includes(title.toLowerCase())) &&
+        (selectedTags.length === 0 ||
+          selectedTags.every(tag =>
+            note.tags.some(noteTag => noteTag.id === tag.id)
+          ))
       )
     })
   }, [title, selectedTags, notes])
